@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Island Design Adventure</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            background: linear-gradient(to top, #87CEEB, #1E90FF); /* Sky blue gradient */
+        }
+        #island-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: 20px auto;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkg5DEgKLprdInrjMzC3ikUDmpgrK8EG5xKA&s');
+            background-size: cover;
+            background-repeat: repeat;
+            border-radius: 20% 20% 0 0;
+            transform: rotateX(30deg); /* Gives the island a 3D side view effect */
+            transform-origin: center bottom;
+            perspective: 1000px; /* For 3D effect */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+        .emoji {
+            position: absolute;
+            transform: translateZ(10px); /* 3D positioning for emojis */
+        }
+        .large-emoji {
+            font-size: 50px;
+        }
+        .small-emoji {
+            font-size: 25px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #ffcc00;
+            transform: scale(1.1);
+        }
+        .emoji-container {
+            margin-top: 20px;
+        }
+        /* Clouds styling */
+        .cloud {
+            position: absolute;
+            font-size: 80px;
+            color: white;
+            opacity: 0.8;
+            z-index: 1;
+        }
+        .cloud:hover {
+            opacity: 1;
+        }
+    </style>
+    <!-- Include html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <h1>Island Design Adventure</h1>
+    <div id="island-container"></div>
+
+    <div class="emoji-container">
+        <button onclick="placeEmoji('🌴', 'large', 'coconut')">Place Coconut Tree</button>
+        <button onclick="placeEmoji('🌳', 'large', 'oak')">Place Oak Tree</button>
+        <button onclick="placeEmoji('🌲', 'large', 'pine')">Place Pine Tree</button>
+        <button onclick="placeEmoji('🐒', 'small', true)">Place Monkey</button>
+        <button onclick="placeEmoji('🏠', 'large')">Place House</button>
+        <button onclick="placeEmoji('🌸', 'small')">Place Flower</button>
+        <button onclick="placeFlyingBird()">Place Flying Bird</button>
+        <button onclick="placeCloud()">Place Cloud</button>
+        <button onclick="downloadIsland()">Export Island as Image</button>
+    </div>
+
+    <script>
+        // Array to track placed positions to avoid overlaps
+        const occupiedPositions = [];
+        const treePositions = [];
+
+        // Random text captions to choose from
+        const randomCaptions = [
+            "A wild paradise has emerged!",
+            "Tropical vibes, anyone?",
+            "Welcome to the monkey haven!",
+            "A floating island of fun!",
+            "This island is simply legendary!",
+            "Monkeys, houses, and sunshine!",
+            "Where trees grow and monkeys play!"
+        ];
+
+        // Function to generate random position on the island (3D)
+        function getRandomPosition(isSky = false) {
+            const island = document.getElementById("island-container");
+            let x, y;
+
+            // If we're placing in the sky, set position to be near the top
+            if (isSky) {
+                x = Math.random() * window.innerWidth;
+                y = Math.random() * 200; // Clouds and flying birds should be near the top (sky)
+            } else {
+                // Random position for the island (x and y within island bounds)
+                x = Math.random() * island.offsetWidth;
+                y = Math.random() * (island.offsetHeight / 2); // Keeping y-axis for ground level (lower half)
+                
+                // Ensuring the placement is within the island's visible surface
+                if (x < 0 || x > island.offsetWidth || y < 0 || y > island.offsetHeight / 2) {
+                    return getRandomPosition(); // Retry if position is outside the island
+                }
+            }
+
+            return { x, y };
+        }
+
+        // Function to place the selected emoji on the island
+        function placeEmoji(emoji, size, type = '') {
+            const position = getRandomPosition(); // This ensures the emoji stays within the island bounds
+            // Avoid placing an emoji where there are already existing ones
+            if (isPositionOccupied(position.x, position.y)) {
+                return; // Do nothing if position is already occupied
+            }
+
+            const emojiElement = document.createElement('div');
+            emojiElement.textContent = emoji;
+            emojiElement.classList.add('emoji');
+
+            if (size === 'large') {
+                emojiElement.classList.add('large-emoji');
+            } else {
+                emojiElement.classList.add('small-emoji');
+            }
+
+            emojiElement.style.left = `${position.x}px`;
+            emojiElement.style.top = `${position.y}px`;
+
+            document.getElementById("island-container").appendChild(emojiElement);
+
+            // If it's a tree, save its position for future monkey placement
+            if (type) {
+                treePositions.push({ x: position.x, y: position.y, type });
+            }
+
+            // Mark this position as occupied
+            occupiedPositions.push(position);
+        }
+
+        // Function to place flying birds in the sky
+        function placeFlyingBird() {
+            const position = getRandomPosition(true); // Sky position
+            if (isPositionOccupied(position.x, position.y)) {
+                return; // Avoid overlap with clouds and other flying birds
+            }
+
+            const birdElement = document.createElement('div');
+            birdElement.textContent = '🦅'; // Flying bird emoji
+            birdElement.classList.add('emoji');
+            birdElement.classList.add('small-emoji');
+            birdElement.style.left = `${position.x}px`;
+            birdElement.style.top = `${position.y}px`;
+
+            document.body.appendChild(birdElement);
+
+            // Mark this position as occupied
+            occupiedPositions.push(position);
+        }
+
+        // Function to place clouds in the sky
+        function placeCloud() {
+            const position = getRandomPosition(true); // Sky position
+            if (isPositionOccupied(position.x, position.y)) {
+                return; // Avoid overlap with birds or other clouds
+            }
+
+            const cloudElement = document.createElement('div');
+            cloudElement.textContent = '☁️';
+            cloudElement.classList.add('cloud');
+            cloudElement.style.left = `${position.x}px`;
+            cloudElement.style.top = `${position.y}px`;
+
+            document.body.appendChild(cloudElement);
+
+            // Mark this position as occupied
+            occupiedPositions.push(position);
+        }
+
+        // Check if the position is already occupied
+        function isPositionOccupied(x, y) {
+            return occupiedPositions.some(pos => {
+                const distance = Math.sqrt(Math.pow(pos.x - x, 2) + Math.pow(pos.y - y, 2));
+                return distance < 50; // Set a threshold for "closeness" to prevent overlap
+            });
+        }
+
+        // Function to download the island as an image with random text
+        function downloadIsland() {
+            const islandContainer = document.getElementById("island-container");
+            
+            html2canvas(islandContainer).then(canvas => {
+                const ctx = canvas.getContext("2d");
+
+                // Randomly select a caption from the list
+                const randomCaption = randomCaptions[Math.floor(Math.random() * randomCaptions.length)];
+
+                // Set the font for the text
+                const fontSize = 24;
+                ctx.font = `${fontSize}px Arial`;
+                ctx.fillStyle = "#000";
+                const textWidth = ctx.measureText(randomCaption).width;
+
+                // Draw text below the image
+                ctx.fillText(randomCaption, (canvas.width - textWidth) / 2, canvas.height + fontSize);
+
+                // Convert canvas to an image and trigger download
+                const link = document.createElement('a');
+                link.download = 'island-design.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

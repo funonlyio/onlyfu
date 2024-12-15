@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Would You Rather? - Absurd Edition 😂</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            padding: 50px;
+            color: #333;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #222;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .option-button {
+            background: radial-gradient(circle, #ff758c, #ff7eb3, #fe91ca);
+            border: none;
+            color: white;
+            padding: 20px 30px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+
+        .option-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .option-button:active {
+            transform: scale(0.95);
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 30px;
+            font-size: 1.8rem;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+            animation: popup 0.5s ease-in-out;
+        }
+
+        .popup p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @keyframes popup {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Would You Rather? - Absurd Edition 😂</div>
+    <div class="question" id="question">Would you rather have fingers made of spaghetti 🍝 or toes made of marshmallows 🍡?</div>
+
+    <div class="options">
+        <button class="option-button" onclick="showPopup('Hope you like slurping your fingers! 🍝😜')">Fingers made of spaghetti</button>
+        <button class="option-button" onclick="showPopup('At least your shoes will smell sweet! 🍡👟')">Toes made of marshmallows</button>
+    </div>
+
+    <div class="popup" id="popup">
+        <p id="popup-message"></p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Would you rather have a pet dinosaur 🦖 or a pet dragon 🐉?",
+                options: [
+                    { text: "Pet dinosaur", message: "Watch out for your furniture! 🦖🛋️" },
+                    { text: "Pet dragon", message: "Roasted marshmallows every day! 🐉🔥" }
+                ]
+            },
+            {
+                question: "Would you rather eat only pizza 🍕 for the rest of your life or only ice cream 🍨?",
+                options: [
+                    { text: "Pizza", message: "Cheesy dreams forever! 🧀🍕" },
+                    { text: "Ice cream", message: "Brain freeze incoming! 🥶🍦" }
+                ]
+            },
+            {
+                question: "Would you rather fly like a bird 🕊️ or swim like a dolphin 🐬?",
+                options: [
+                    { text: "Fly like a bird", message: "Careful with low-flying planes! ✈️🕊️" },
+                    { text: "Swim like a dolphin", message: "Don’t forget your waterproof sunscreen! 🐬🌊" }
+                ]
+            },
+            {
+                question: "Would you rather live in a giant shoe 👞 or a treehouse 🌳?",
+                options: [
+                    { text: "Giant shoe", message: "Step into style... literally! 👠🏠" },
+                    { text: "Treehouse", message: "Hope you’re not afraid of heights! 🌳😱" }
+                ]
+            },
+            {
+                question: "Would you rather have a talking dog 🐶 or a singing cat 🐱?",
+                options: [
+                    { text: "Talking dog", message: "Endless gossip about squirrels! 🐶🗣️" },
+                    { text: "Singing cat", message: "Your concerts will never be the same! 🎤🐱" }
+                ]
+            },
+            {
+                question: "Would you rather be able to teleport anywhere instantly ✨ or be able to time travel ⏳?",
+                options: [
+                    { text: "Teleport instantly", message: "Say goodbye to traffic jams! 🚗❌" },
+                    { text: "Time travel", message: "Careful not to mess up the timeline! 🕰️😅" }
+                ]
+            },
+            {
+                question: "Would you rather be invisible 🕶️ or be able to read minds 🧠?",
+                options: [
+                    { text: "Be invisible", message: "Sneaky much? 🕶️👻" },
+                    { text: "Read minds", message: "Uh-oh, too much information! 🤯" }
+                ]
+            },
+            {
+                question: "Would you rather live in space 🌌 or underwater 🌊?",
+                options: [
+                    { text: "Space", message: "Zero gravity, zero problems! 🪐🚀" },
+                    { text: "Underwater", message: "Meet your new fishy friends! 🐠🐟" }
+                ]
+            },
+            {
+                question: "Would you rather have unlimited free tacos 🌮 or free coffee ☕?",
+                options: [
+                    { text: "Free tacos", message: "Taco 'bout a dream come true! 🌮❤️" },
+                    { text: "Free coffee", message: "Espresso yourself anytime! ☕🔥" }
+                ]
+            },
+            {
+                question: "Would you rather always be 10 minutes late 🕒 or 20 minutes early ⏰?",
+                options: [
+                    { text: "10 minutes late", message: "Fashionably late, as always! 🕒✨" },
+                    { text: "20 minutes early", message: "Plenty of time to chill! ⏰🧘" }
+                ]
+            },
+            {
+                question: "Would you rather have the ability to talk to animals 🐾 or speak all languages 🌍?",
+                options: [
+                    { text: "Talk to animals", message: "Finally, you can ask your dog why they bark at the mailman! 🐕📬" },
+                    { text: "Speak all languages", message: "Your travels just got a lot easier! 🌍✈️" }
+                ]
+            },
+            {
+                question: "Would you rather eat a worm sandwich 🪱 or a cricket smoothie 🦗?",
+                options: [
+                    { text: "Worm sandwich", message: "Slimy yet satisfying! 🪱🥪" },
+                    { text: "Cricket smoothie", message: "Crunchy AND refreshing! 🦗🥤" }
+                ]
+            },
+            {
+                question: "Would you rather be stuck on a broken ski lift 🎿 or in a stalled elevator 🛗?",
+                options: [
+                    { text: "Ski lift", message: "Enjoy the view while you dangle! 🎿❄️" },
+                    { text: "Elevator", message: "Hope you brought snacks! 🛗🍫" }
+                ]
+            },
+            {
+                question: "Would you rather have a third arm 💪 or a third leg 🦵?",
+                options: [
+                    { text: "Third arm", message: "Extra high fives for everyone! 💪✋" },
+                    { text: "Third leg", message: "You'll be unbeatable in races! 🦵🏁" }
+                ]
+            },
+            {
+                question: "Would you rather have a rewind button ⏪ or a pause button ⏸️ for your life?",
+                options: [
+                    { text: "Rewind button", message: "Do-over, anyone? ⏪😅" },
+                    { text: "Pause button", message: "Take a break whenever you want! ⏸️🛌" }
+                ]
+            },
+            {
+                question: "Would you rather sneeze glitter 🌟 or burp confetti 🎉?",
+                options: [
+                    { text: "Sneeze glitter", message: "Fabulous AND annoying! 🌟🤧" },
+                    { text: "Burp confetti", message: "Party trick unlocked! 🎉🤭" }
+                ]
+            },
+            {
+                question: "Would you rather have unlimited free books 📚 or unlimited free movies 🎥?",
+                options: [
+                    { text: "Free books", message: "Bookworm heaven! 📚❤️" },
+                    { text: "Free movies", message: "Time for the ultimate movie marathon! 🎥🍿" }
+                ]
+            },
+            {
+                question: "Would you rather have your dream job 🏆 or win the lottery 💰?",
+                options: [
+                    { text: "Dream job", message: "Work feels like play every day! 🏆😊" },
+                    { text: "Win the lottery", message: "Time to buy that island! 🏝️💰" }
+                ]
+            },
+            {
+                question: "Would you rather always have to sing 🎤 or always have to dance 💃?",
+                options: [
+                    { text: "Always sing", message: "Life is now a musical! 🎤🎶" },
+                    { text: "Always dance", message: "Dancing through the decades! 💃🕺" }
+                ]
+            },
+            {
+                question: "Would you rather have the power to control the weather 🌦️ or the power to talk to machines 🤖?",
+                options: [
+                    { text: "Control weather", message: "Snow day on demand! ❄️🌞" },
+                    { text: "Talk to machines", message: "Your toaster has feelings too! 🤖🍞" }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+
+        function showNextQuestion() {
+            const nextQuestion = questions[currentQuestion];
+            if (!nextQuestion) {
+                document.getElementById('question').innerText = "Thanks for playing! You’ve made some absurd choices today! 🎉🤣";
+                document.querySelector('.options').innerHTML = "<button class='option-button' onclick='location.reload()'>Restart Game 🔄</button>";
+                return;
+            }
+
+            document.getElementById('question').innerText = nextQuestion.question;
+            const optionsContainer = document.querySelector('.options');
+            optionsContainer.innerHTML = '';
+
+            nextQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.innerText = option.text;
+                button.onclick = () => showPopup(option.message);
+                optionsContainer.appendChild(button);
+            });
+
+            currentQuestion++;
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById('popup');
+            const popupMessage = document.getElementById('popup-message');
+            popupMessage.innerText = message;
+            popup.style.display = 'block';
+
+            setTimeout(() => {
+                popup.style.display = 'none';
+                showNextQuestion();
+            }, 3000);
+        }
+
+        // Start the first question
+        showNextQuestion();
+    </script>
+</body>
+</html>

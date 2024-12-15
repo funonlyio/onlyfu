@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do Not Get Rickrolled</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        #playground {
+            position: relative;
+            height: 100vh;
+            background-image: url('https://img-9gag-fun.9cache.com/photo/awMEQZB_460s.jpg');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        #buttons-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        button {
+            position: absolute;
+            padding: 10px 15px;
+            font-size: 14px;
+            background-image: url('https://static.vecteezy.com/system/resources/previews/017/348/780/non_2x/comic-background-pop-art-texture-starburst-cartoon-style-manga-anime-design-with-explosion-or-action-effect-for-print-orange-backdrop-with-halftone-gradient-funny-line-frame-illustration-vector.jpg');
+            background-size: cover;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border-radius: 8px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Text shadow for better readability */
+            word-wrap: break-word; /* Allow wrapping of text */
+            max-width: 250px;  /* Max width of button */
+            min-width: 120px;  /* Min width of button */
+            max-height: 90px;  /* Max height of button */
+            white-space: normal; /* Allow text wrapping */
+            overflow: hidden; /* Prevent overflow of text */
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background-color: rgba(255, 140, 0, 0.8); /* Change color on hover */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Add shadow effect */
+        }
+
+        #popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        #popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: auto;
+            position: relative;
+        }
+
+        #popup-message {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #ff6347; /* Tomato color for the message */
+        }
+
+        iframe {
+            width: 100%;
+            height: 315px;
+            z-index: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive behavior for mobile */
+        @media (max-width: 768px) {
+            button {
+                max-width: 80%;
+                min-width: 60%;
+                font-size: 12px;
+            }
+        }
+
+        /* Popup content adjustments */
+        #popup-content {
+            width: 90%;
+            max-width: 600px;
+            padding: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="playground">
+        <div id="buttons-container"></div>
+    </div>
+
+    <div id="popup" class="hidden">
+        <div id="popup-content">
+            <h2 id="popup-message">Oops, You Found the Legendary Rick Roll! 😂</h2>
+            <iframe id="rick-roll-video" frameborder="0" autoplay="1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Random messages for the buttons (non-Rick Roll)
+        const buttonMessages = [
+            "Nice try, but you didn't get Rickrolled this time! 😎",
+            "Phew! That was a close call! Keep going! 🏃‍♂️",
+            "You’re getting warmer... but still no Rick Roll! 🔥",
+            "This one’s safe! No traps here! 😉",
+            "You're dodging the Rick Roll like a pro! 🏆",
+            "Almost there! But not quite yet... 😂",
+            "You got this! No Rick Roll yet! 💪"
+        ];
+
+        // Function to randomly place buttons with different sizes
+        function placeButtons() {
+            const container = document.getElementById("buttons-container");
+            container.innerHTML = ''; // Clear previous buttons
+            const numButtons = 20;
+
+            const maxX = window.innerWidth - 50; // Max X position
+            const maxY = window.innerHeight - 50; // Max Y position
+
+            let placedPositions = [];
+
+            for (let i = 0; i < numButtons; i++) {
+                const button = document.createElement("button");
+                button.innerText = buttonMessages[Math.floor(Math.random() * buttonMessages.length)];
+
+                // Random size for each button
+                const width = Math.floor(Math.random() * 150) + 100; // Random width between 100 and 250px
+                const height = Math.floor(Math.random() * 50) + 40;  // Random height between 40 and 90px
+                button.style.width = `${width}px`;
+                button.style.height = `${height}px`;
+
+                // Ensure no overlapping buttons
+                let xPos, yPos;
+                do {
+                    xPos = Math.floor(Math.random() * (maxX - width));  // Account for button width
+                    yPos = Math.floor(Math.random() * (maxY - height)); // Account for button height
+                } while (isOverlap(xPos, yPos, placedPositions, width, height));
+
+                button.style.left = `${xPos}px`;
+                button.style.top = `${yPos}px`;
+                placedPositions.push([xPos, yPos, width, height]);
+
+                // Randomly assign Rick Roll button
+                if (Math.random() < 0.5) {
+                    button.dataset.isRickRoll = "true"; // This button is the Rick Roll button
+                } else {
+                    button.dataset.isRickRoll = "false";
+                }
+
+                button.addEventListener('click', () => {
+                    if (button.dataset.isRickRoll === "true") {
+                        showPopup("Oops, You Found the Legendary Rick Roll! 😂", true);
+                    } else {
+                        const randomMessage = buttonMessages[Math.floor(Math.random() * buttonMessages.length)];
+                        showPopup(randomMessage, false);
+                    }
+                });
+
+                container.appendChild(button);
+            }
+        }
+
+        // Function to check if buttons overlap
+        function isOverlap(xPos, yPos, placedPositions, width, height) {
+            for (let pos of placedPositions) {
+                let [existingX, existingY, existingWidth, existingHeight] = pos;
+                // Check if the new button overlaps with any previously placed buttons
+                if (
+                    xPos < existingX + existingWidth &&
+                    xPos + width > existingX &&
+                    yPos < existingY + existingHeight &&
+                    yPos + height > existingY
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Function to show the popup based on button type
+        function showPopup(message, isRickRoll) {
+            const popup = document.getElementById("popup");
+            const iframe = document.getElementById("rick-roll-video");
+            const popupMessage = document.getElementById("popup-message");
+
+            // Set message and video source
+            popupMessage.innerText = message;
+            if (isRickRoll) {
+                iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
+                iframe.style.display = "block";
+            } else {
+                iframe.style.display = "none";  // Hide iframe for non-Rick Roll
+                setTimeout(() => {
+                    popup.style.display = "none";  // Close popup after a delay
+                }, 2000); // Close the popup after 2 seconds
+            }
+
+            popup.style.display = "flex";
+        }
+
+        // Initialize the buttons on page load
+        window.onload = function() {
+            placeButtons();
+        };
+    </script>
+</body>
+</html>

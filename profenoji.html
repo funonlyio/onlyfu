@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Creator - FUNONLY.IO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .category-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .category-button {
+            padding: 20px 40px;
+            background-color: #fff;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .category-button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .generated-character {
+            font-size: 30px;
+            margin-top: 20px;
+            color: #555;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        #downloadBtn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #downloadBtn:hover {
+            background-color: #45a049;
+        }
+
+        #downloadBtn:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        #renamePopup {
+            display: none;
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            text-align: center;
+        }
+
+        #renamePopup input {
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        #renamePopup button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Emoji Creator - FUNONLY.IO</h1>
+    <p>Create your own professional emoji character!</p>
+    <div class="category-container">
+        <div class="category-button" onclick="generateCharacter('male')">Male</div>
+        <div class="category-button" onclick="generateCharacter('female')">Female</div>
+    </div>
+
+    <div class="generated-character" id="generatedCharacter"></div>
+
+    <div>
+        <label for="nameInput">Enter Name:</label>
+        <input type="text" id="nameInput" placeholder="Name for your emoji character" />
+
+        <label for="ageInput">Enter Age:</label>
+        <input type="number" id="ageInput" placeholder="Age" />
+    </div>
+
+    <button id="downloadBtn" onclick="downloadCharacter()" disabled>Download Your Emoji</button>
+
+    <canvas id="emojiCanvas"></canvas>
+
+    <div id="renamePopup">
+        <h3>Rename your character image:</h3>
+        <input type="text" id="newName" placeholder="Enter new name for your character" />
+        <button onclick="applyRename()">Rename & Download</button>
+    </div>
+
+    <script>
+        const professions = {
+            male: [
+                { profession: "Chef", style: "👨‍🍳" },
+                { profession: "Doctor", style: "👨‍⚕️" },
+                { profession: "Engineer", style: "👨‍💻" },
+                { profession: "Artist", style: "👨‍🎨" },
+                { profession: "Musician", style: "👨‍🎤" },
+                { profession: "Firefighter", style: "👨‍🚒" },
+                { profession: "Teacher", style: "👨‍🏫" },
+                { profession: "Scientist", style: "👨‍🔬" },
+                { profession: "Pilot", style: "👨‍✈️" },
+                { profession: "Lawyer", style: "👨‍⚖️" },
+                { profession: "Photographer", style: "👨‍📷" },
+                { profession: "Nurse", style: "👨‍⚕️" },
+                { profession: "Soldier", style: "👨‍✈️" },
+                { profession: "Athlete", style: "🏃‍♂️" },
+                { profession: "Architect", style: "👨‍💼" },
+                { profession: "Plumber", style: "👨‍🔧" },
+                { profession: "Baker", style: "👨‍🍳" },
+                { profession: "Librarian", style: "👨‍🏫" },
+                { profession: "Mechanic", style: "👨‍🔧" },
+                { profession: "Artist", style: "👨‍🎨" },
+                { profession: "Electrician", style: "👨‍🔌" },
+                { profession: "Farmer", style: "👨‍🌾" },
+                { profession: "Carpenter", style: "👨‍🔨" },
+                { profession: "Veterinarian", style: "👨‍⚕️" },
+                { profession: "Software Developer", style: "👨‍💻" },
+                { profession: "Politician", style: "👨‍💼" },
+                { profession: "Driver", style: "👨‍🚗" },
+                { profession: "Journalist", style: "👨‍💻" },
+                { profession: "Technician", style: "👨‍🔧" }
+            ],
+            female: [
+                { profession: "Chef", style: "👩‍🍳" },
+                { profession: "Doctor", style: "👩‍⚕️" },
+                { profession: "Engineer", style: "👩‍💻" },
+                { profession: "Artist", style: "👩‍🎨" },
+                { profession: "Musician", style: "👩‍🎤" },
+                { profession: "Firefighter", style: "👩‍🚒" },
+                { profession: "Teacher", style: "👩‍🏫" },
+                { profession: "Scientist", style: "👩‍🔬" },
+                { profession: "Pilot", style: "👩‍✈️" },
+                { profession: "Lawyer", style: "👩‍⚖️" },
+                { profession: "Photographer", style: "👩‍📷" },
+                { profession: "Nurse", style: "👩‍⚕️" },
+                { profession: "Soldier", style: "👩‍✈️" },
+                { profession: "Athlete", style: "🏃‍♀️" },
+                { profession: "Architect", style: "👩‍💼" },
+                { profession: "Plumber", style: "👩‍🔧" },
+                { profession: "Baker", style: "👩‍🍳" },
+                { profession: "Librarian", style: "👩‍🏫" },
+                { profession: "Mechanic", style: "👩‍🔧" },
+                { profession: "Artist", style: "👩‍🎨" },
+                { profession: "Electrician", style: "👩‍🔌" },
+                { profession: "Farmer", style: "👩‍🌾" },
+                { profession: "Carpenter", style: "👩‍🔨" },
+                { profession: "Veterinarian", style: "👩‍⚕️" },
+                { profession: "Software Developer", style: "👩‍💻" },
+                { profession: "Politician", style: "👩‍💼" },
+                { profession: "Driver", style: "👩‍🚗" },
+                { profession: "Journalist", style: "👩‍💻" },
+                { profession: "Technician", style: "👩‍🔧" }
+            ]
+        };
+
+        let selectedCharacter = null;
+
+        function generateCharacter(gender) {
+            const categoryArray = professions[gender];
+            if (!categoryArray) return;
+
+            const randomIndex = Math.floor(Math.random() * categoryArray.length);
+            selectedCharacter = categoryArray[randomIndex];
+
+            const name = document.getElementById('nameInput').value || 'Anonymous';
+            const age = document.getElementById('ageInput').value || 'unknown age';
+
+            // Update the generated character text
+            document.getElementById('generatedCharacter').innerHTML = `${name} is a professional ${selectedCharacter.profession} at ${age} years old. Their job involves being a true expert as ${selectedCharacter.style}.`;
+
+            document.getElementById('downloadBtn').disabled = false;
+        }
+
+        function downloadCharacter() {
+            const name = document.getElementById('nameInput').value || 'Emoji Character';
+            const age = document.getElementById('ageInput').value || 'Unknown Age';
+            const character = selectedCharacter;
+
+            if (!character) {
+                alert("Please generate a character first!");
+                return;
+            }
+
+            const canvas = document.getElementById('emojiCanvas');
+            const ctx = canvas.getContext('2d');
+            const canvasWidth = 600;
+            const canvasHeight = 400;
+
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            // Drawing the emoji in a larger size
+            ctx.font = '80px Arial';
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${character.style}`, canvasWidth / 2, canvasHeight / 4);
+
+            // Professional text
+            ctx.font = '25px Arial';
+            const text = `${name} is a professional ${character.profession} at ${age} years old. Their job involves being a true expert as ${character.style}.`;
+            const lineHeight = 35;
+            const maxWidth = canvasWidth - 40;
+
+            // Split the text to make sure it fits within the canvas
+            const lines = wrapText(ctx, text, maxWidth);
+            let yPosition = canvasHeight / 2;
+
+            lines.forEach((line, index) => {
+                ctx.fillText(line, canvasWidth / 2, yPosition);
+                yPosition += lineHeight;
+            });
+
+            // Footer text
+            ctx.font = '18px Arial';
+            ctx.fillStyle = '#007BFF';
+            ctx.fillText("Created by FUNONLY.IO", canvasWidth / 2, canvasHeight - 30);
+
+            const dataUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataUrl;
+
+            showRenamePopup(link);
+        }
+
+        function wrapText(ctx, text, maxWidth) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            words.forEach(word => {
+                const testLine = currentLine + word + ' ';
+                const testWidth = ctx.measureText(testLine).width;
+
+                if (testWidth > maxWidth && currentLine !== '') {
+                    lines.push(currentLine);
+                    currentLine = word + ' ';
+                } else {
+                    currentLine = testLine;
+                }
+            });
+
+            if (currentLine !== '') {
+                lines.push(currentLine);
+            }
+
+            return lines;
+        }
+
+        function showRenamePopup(link) {
+            document.getElementById('renamePopup').style.display = 'block';
+            const applyRenameButton = document.querySelector('#renamePopup button');
+            applyRenameButton.onclick = function () {
+                const newName = document.getElementById('newName').value.trim() || 'emoji-image';
+                link.download = `${newName}.png`;
+                link.click();
+                document.getElementById('renamePopup').style.display = 'none';
+            };
+        }
+
+        function applyRename() {
+            const newName = document.getElementById('newName').value.trim() || 'emoji-image';
+            link.download = `${newName}.png`;
+            link.click();
+        }
+    </script>
+</body>
+</html>

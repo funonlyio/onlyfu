@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Need a .... - Hilarious Button Game</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #333;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .mislabeled-button {
+            background: radial-gradient(circle, #ff7e5f, #feb47b, #ff6347);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .mislabeled-button:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .mislabeled-button:active {
+            transform: scale(0.95);
+        }
+
+        .funny-message {
+            font-size: 1.8rem;
+            color: #e74c3c;
+            font-weight: bold;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 12px;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .funny-message button {
+            background: #e74c3c;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .funny-message button:hover {
+            background: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to "I Need a ... Game" 🎉😂</h1>
+
+    <div class="button-container" id="button-container">
+        <!-- Buttons will be inserted dynamically here -->
+    </div>
+
+    <div class="funny-message" id="message">
+        <p id="message-text"></p>
+        <button onclick="closeMessage()">Next Button</button>
+    </div>
+
+    <script>
+        const messages = [
+            "I need a pet unicorn... but I only have a rubber ducky 🦄🦆",
+            "I need a billion dollars... but it's in Monopoly money 💸",
+            "I need pizza... but all I got was a salad 🍕🍗",
+            "I need a time machine... but my watch broke 🕰️",
+            "I need a spaceship... but my car is stuck in traffic 🚀",
+            "I need a vacation... but I’m stuck at my desk 🏖️",
+            "I need a robot butler... but I only have a Roomba 🤖",
+            "I need a castle... but all I got was a sandcastle 🏰",
+            "I need superpowers... but my only power is napping 🛌",
+            "I need a flying carpet... but my rug won’t budge 🪄",
+            "I need a chocolate fountain... but it’s just fondue 🍫",
+            "I need a new phone... but I’m still using a flip phone 📞",
+            "I need to win the lottery... but I keep losing my tickets 🎟️",
+            "I need an exotic vacation... but I’m stuck in my backyard 🌴",
+            "I need an alien friend... but all I got was my cat 👽🐈",
+            "I need a rocket launcher... but all I got was a Nerf gun 🚀",
+            "I need to ride a dragon... but I’m riding a donkey 🐉🐴",
+            "I need to discover a new planet... but I can’t even find my keys 🔑",
+            "I need a genie in a lamp... but all I got was a candle 🪔",
+            "I need a wardrobe to Narnia... but it’s just full of old coats 🧥",
+            "I need a treasure map... but all I got was IKEA instructions 🗺️",
+            "I need a magical potion... but it’s just soda 🧃",
+            "I need to be invisible... but everyone’s still looking at me 👀",
+            "I need a personal chef... but all I got was a microwave 🍳",
+            "I need a cool nickname... but everyone calls me 'Squishy' 🐙",
+            "I need a secret hideout... but it’s just my closet 🏠",
+            "I need to travel through time... but my clock is stuck ⏳",
+            "I need a cool car... but all I got was a bike 🚗🚲",
+            "I need a giant teddy bear... but all I got was a tiny one 🧸",
+            "I need to rule the world... but I can’t even rule my plants 🌍🪴"
+        ];
+
+        const buttonContainer = document.getElementById('button-container');
+        const messageDiv = document.getElementById('message');
+        const messageText = document.getElementById('message-text');
+
+        // Create 30 buttons
+        for (let i = 0; i < 30; i++) {
+            const button = document.createElement('button');
+            button.className = 'mislabeled-button';
+            button.innerText = `I need a ${['🍕', '🚀', '🦄', '🛌', '🏰', '🤖'][i % 6]}`;
+            button.addEventListener('click', () => {
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                messageText.innerText = randomMessage;
+                messageDiv.style.display = 'block';
+            });
+            buttonContainer.appendChild(button);
+        }
+
+        // Close message popup
+        function closeMessage() {
+            messageDiv.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

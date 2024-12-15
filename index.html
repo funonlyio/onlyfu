@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funonly</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'MedievalSharp', sans-serif;
+            background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff00ff, #00ffff, #ffff00);
+            background-size: 600% 600%;
+            animation: gradientAnimation 5s ease infinite;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            cursor: url('https://www.example.com/your-cursor-icon.png'), auto; /* Replace with your own cursor icon */
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-top: 50px;
+        }
+
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(3, 320px); /* 3 columns */
+            gap: 20px;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .button {
+            background-color: #444;
+            border: 2px solid #ff0000;
+            color: #fff;
+            font-size: 1.2em;
+            padding: 20px 40px;
+            margin: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 320px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .button:hover {
+            background-color: #ff0000;
+            color: #121212;
+            transform: scale(1.1);
+        }
+
+        /* Specific styles for the first button */
+        .button-first {
+            background-image: url('https://i.ibb.co/MPGGGrn/300-000-Years-Ago.jpg');
+        }
+
+        /* Optional: Customize button text style */
+        .button span {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Funonly</h1>
+    <div class="buttons-container">
+        <a href="linked/year.html">
+            <button class="button button-first">
+                <span>300,000 Years Ago</span>
+            </button>
+        </a>
+        <button class="button"><span>Button 2</span></button>
+        <button class="button"><span>Button 3</span></button>
+        <button class="button"><span>Button 4</span></button>
+        <button class="button"><span>Button 5</span></button>
+        <button class="button"><span>Button 6</span></button>
+    </div>
+</body>
+</html>

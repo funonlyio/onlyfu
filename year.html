@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Were You Like 300,000 Years Ago?</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffecd1;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #7d5a4f;
+            margin-top: 50px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #7d5a4f;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid #7d5a4f;
+            background-color: #f9f3ec;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: #7d5a4f;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #a4745f;
+        }
+
+        /* Popup Styles */
+        #popup, #helpPopup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #popupContent, #helpPopupContent {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        #popupContent img {
+            width: 100%;
+            max-width: 200px;
+            margin: 20px 0;
+        }
+
+        #popupContent h2, #helpPopupContent h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #7d5a4f;
+        }
+
+        #popupContent p, #helpPopupContent p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #5c4d43;
+        }
+
+        .popup-buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .popup-buttons button {
+            width: 45%;
+            font-size: 16px;
+        }
+
+        /* Help Button in Top-Right */
+        .help-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ff6347;
+            color: white;
+            font-size: 30px;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            z-index: 1100;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .container {
+                padding: 20px;
+            }
+            button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>What were you like 300,000 years ago?</h1>
+        
+        <!-- Form to get information -->
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" placeholder="Enter your name">
+
+        <label for="age">How old are you?</label>
+        <input type="number" id="age" placeholder="Enter your age">
+
+        <label for="occupation">What would your role be?</label>
+        <select id="occupation">
+            <option value="Hunter">Hunter</option>
+            <option value="Gatherer">Gatherer</option>
+            <option value="Shaman">Shaman</option>
+            <option value="Leader">Leader</option>
+            <option value="Warrior">Warrior</option>
+        </select>
+
+        <button onclick="revealPopup()">Reveal Your Ancient Self</button>
+    </div>
+
+    <!-- Popup for reveal -->
+    <div id="popup">
+        <div id="popupContent">
+            <h2 id="popupTitle">Your Ancestor Reveal!</h2>
+            <img id="popupImage" src="https://w7.pngwing.com/pngs/643/202/png-transparent-homo-sapiens-human-behavior-spear-weapon-homo-sapiens-mammal-human-fauna.png" alt="Ancient Human">
+            <p id="popupMessage"></p>
+
+            <div class="popup-buttons">
+                <button onclick="closePopup()">Close</button>
+                <button onclick="learnMore()">Learn About Humans</button>
+                <button onclick="downloadMessage()">Download Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Icon Button -->
+    <button class="help-button" onclick="showHelpPopup()">❓</button>
+
+    <!-- Help Popup -->
+    <div id="helpPopup">
+        <div id="helpPopupContent">
+            <h2>Game Instructions & Credits</h2>
+            <p>This game allows you to explore what you might have been like 300,000 years ago based on your age and role.</p>
+            <p>By entering your name, age, and occupation, you'll get a popup with an image and message describing what your role might have been in ancient times.</p>
+            <p>If you are under 18 years old, you'll see a young version of a human; otherwise, the adult version will be shown. Each age has a unique message reflecting what you might have done in the ancient world.</p>
+            <p>This game was created to be fun and educational, exploring how we could have lived in prehistoric times.</p>
+            <p>Credits: This game was designed by Aveesha Ninsara and powered by HTML, CSS, and JavaScript.</p>
+
+            <div class="popup-buttons">
+                <button onclick="closeHelpPopup()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let popupMessageText = "";
+        let popupImage = document.getElementById("popupImage");
+        let popupTitle = document.getElementById("popupTitle");
+
+        const ageMessages = {
+            0: "At 0 years old, you were a small child in a world full of danger and wonder. You depended on the tribe for care and survival.",
+            1: "At 1 year old, you began to learn and grow, observing the actions of others, preparing for a life of learning and exploration.",
+            2: "By 2 years old, your curiosity was your strongest ally. You would start to explore your surroundings more independently.",
+            3: "At 3, you were quickly becoming more aware of the world around you, starting to mimic the adults and their tasks.",
+            4: "At 4, your small hands would have started to try using tools, trying to learn the basics of survival.",
+            5: "At 5 years old, you were starting to understand the importance of community, staying close to others for safety.",
+            6: "By 6 years old, you were learning skills like gathering small plants and maybe even simple tools.",
+            7: "At 7, you might have been able to assist in gathering food and learning how to communicate with the tribe.",
+            8: "By age 8, you were becoming more independent, helping others with basic survival tasks.",
+            9: "At 9, you were starting to take on small roles in the tribe, gathering or learning to craft tools.",
+            10: "At 10, you were learning the value of teamwork and started becoming more involved in tribe activities.",
+            11: "At 11, you began helping in more significant ways like preparing food and working with adults.",
+            12: "At 12, you might be learning how to hunt or take on more adult responsibilities.",
+            13: "At 13, you were preparing for the transition into adulthood and learning essential survival skills.",
+            14: "At 14, you started taking on more adult roles, such as hunting or gathering.",
+            15: "At 15, you were helping lead hunts, and your role in the tribe became more significant.",
+            16: "At 16, you were working closely with elders and taking on responsibility for your survival.",
+            17: "By 17, you were a valuable member of the tribe, helping in hunting or leadership roles.",
+            18: "At 18, you entered adulthood, fully participating in tribe activities like hunting or gathering.",
+            19: "At 19, you were a young adult, likely leading or contributing in major ways to the tribe.",
+            20: "At 20, you were in the prime of your life, contributing significantly to your tribe's survival.",
+            21: "At 21, you might be taking on the role of a leader or skilled hunter.",
+            22: "At 22, you were a well-respected member, able to teach the younger generation.",
+            23: "At 23, you were a vital part of the tribe, aiding in survival and leadership tasks.",
+            24: "At 24, you were likely becoming a guide and mentor for the tribe's younger members.",
+            25: "At 25, your role was well-established as a leader or expert in survival skills.",
+            26: "At 26, you were preparing to pass your knowledge on to the next generation.",
+            27: "At 27, you were a respected elder, sharing wisdom and guiding the tribe's youth.",
+            28: "At 28, you were instrumental in decision-making for the tribe's future.",
+            29: "At 29, you were highly influential, helping your tribe thrive with wisdom and strength.",
+            30: "At 30, you were a leader in the community, ensuring the tribe's survival and prosperity.",
+            31: "At 31, your wisdom and leadership were crucial in guiding the tribe.",
+            32: "At 32, you were likely a figurehead, ensuring that the tribe's traditions and knowledge were upheld.",
+            33: "At 33, your strength and wisdom shaped the tribe's future for generations.",
+            34: "At 34, you were a cornerstone of your tribe's survival, ensuring that the knowledge was passed down.",
+            35: "At 35, you were considered an elder, revered for your years of experience.",
+            36: "At 36, you were a key figure in shaping the community's future, both physically and mentally.",
+            37: "At 37, you were still vital to the tribe's leadership and decision-making.",
+            38: "At 38, you were a senior member, possibly serving as an advisor or tribal leader.",
+            39: "At 39, you were an elder, ensuring that the next generation understood the tribe's traditions.",
+            40: "At 40, your experience and leadership would help your tribe continue to thrive.",
+            41: "At 41, you had become one of the senior leaders of your tribe.",
+            42: "At 42, your knowledge of survival and leadership was passed on to younger members.",
+            43: "At 43, you were at the peak of your influence, guiding the tribe with wisdom.",
+            44: "At 44, you were an elder, respected and highly influential in the tribe's decisions.",
+            45: "At 45, you ensured that the tribe's ways were passed down, protecting your legacy.",
+            46: "At 46, you were a pillar of the community, shaping the future with your guidance.",
+            47: "At 47, your expertise in survival and leadership was crucial to the tribe's success.",
+            48: "At 48, you were becoming a legend, with your stories and leadership shaping the future.",
+            49: "At 49, your wisdom and experience were honored, helping guide the tribe for generations.",
+            50: "At 50, you had become an elder, revered for your vast knowledge and leadership."
+        };
+
+        function revealPopup() {
+            const name = document.getElementById("name").value;
+            const age = parseInt(document.getElementById("age").value);
+            const occupation = document.getElementById("occupation").value;
+
+            // Generate message based on age
+            let message = "";
+            if (age < 18) {
+                message = `Hello ${name}! At ${age} years old, you're like a young one in the tribe. You would be learning and growing, helping out with basic tasks. Your role as a ${occupation} would be about gaining wisdom.`;
+                popupImage.src = "https://img.favpng.com/4/19/20/boy-male-homo-sapiens-clip-art-png-favpng-AtGTxF9gAMKC6pqwDMyr3AMvk.jpg";
+                popupTitle.innerText = "Young Hunter";
+            } else {
+                message = `Hello ${name}! At ${age} years old, you're an experienced ${occupation} of the tribe. Your strength and wisdom have shaped the tribe's future.`;
+                popupImage.src = "https://w7.pngwing.com/pngs/643/202/png-transparent-homo-sapiens-human-behavior-spear-weapon-homo-sapiens-mammal-human-fauna.png";
+                popupTitle.innerText = "Ancient Leader";
+            }
+
+            // Set message and show popup
+            document.getElementById("popupMessage").innerText = message;
+            document.getElementById("popup").style.display = "flex";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        function learnMore() {
+            alert("Humans first evolved around 300,000 years ago. Our early ancestors were similar to us in many ways, but also very different. Over time, we adapted to our environment, developed language, and created tools to help us survive.");
+        }
+
+        function downloadMessage() {
+            const blob = new Blob([popupMessageText], { type: "text/plain" });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "ancient_message.txt";
+            link.click();
+        }
+
+        function showHelpPopup() {
+            document.getElementById("helpPopup").style.display = "flex";
+        }
+
+        function closeHelpPopup() {
+            document.getElementById("helpPopup").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
